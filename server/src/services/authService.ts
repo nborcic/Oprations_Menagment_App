@@ -8,6 +8,8 @@ const JWT_EXPIRES_IN = '7d';
 
 export async function loginUser(email: string, password: string) {
   const user = await prisma.user.findUnique({ where: { email } });
+  // Use the same error message for both cases — prevents attackers from
+  // discovering which emails are registered (user enumeration attack).
   if (!user) throw new Error('Invalid credentials');
 
   const valid = await bcrypt.compare(password, user.password);

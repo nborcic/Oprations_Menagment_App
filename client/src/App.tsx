@@ -14,13 +14,16 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<LoginPage />} />
       <Route element={<Layout />}>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* replace keeps the browser history clean — back button won't loop through "/" */}
+      <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/customers" element={<CustomersPage />} />
+        {/* /new must come before /:id — otherwise React Router matches "new" as the :id param */}
         <Route path="/customers/new" element={<CustomerFormPage />} />
         <Route path="/customers/:id" element={<CustomerDetailPage />} />
         <Route path="/customers/:id/edit" element={<CustomerFormPage />} />
         <Route path="/jobs" element={<JobsPage />} />
+        {/* same ordering rule — /new before /:id */}
         <Route path="/jobs/new" element={<JobFormPage />} />
         <Route path="/jobs/:id" element={<JobDetailPage />} />
         <Route path="/jobs/:id/edit" element={<JobFormPage />} />

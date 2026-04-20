@@ -8,6 +8,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatDate(date: string | Date | null | undefined): string {
   if (!date) return '—';
+  // parseISO instead of new Date() — avoids timezone-shifting ISO strings in some browsers.
   const d = typeof date === 'string' ? parseISO(date) : date;
   if (!isValid(d)) return '—';
   return format(d, 'MMM d, yyyy');
@@ -67,5 +68,6 @@ export function actionLabel(action: string): string {
     CUSTOMER_CREATED: 'created customer',
     CUSTOMER_UPDATED: 'updated customer',
   };
+  // Fallback converts unknown actions like "JOB_REOPENED" → "job reopened" automatically.
   return map[action] ?? action.toLowerCase().replace(/_/g, ' ');
 }

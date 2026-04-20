@@ -17,6 +17,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [token, setToken] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  // Re-hydrate session from localStorage on first mount so the user stays
+  // logged in across page refreshes without hitting the server again.
+  // isLoading stays true until this finishes — prevents a flash of the login page.
   useEffect(() => {
     const storedToken = localStorage.getItem('somp_token');
     const storedUser = localStorage.getItem('somp_user');
@@ -49,6 +52,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// Throws if called outside <AuthProvider> so missing context fails loudly at dev time.
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');

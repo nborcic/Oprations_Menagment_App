@@ -7,6 +7,8 @@ export interface AuthPayload {
   role: Role;
 }
 
+// user is optional here because Express doesn't know about our middleware at the type level.
+// Routes that call authenticate first can safely use req.user! — it's always set by then.
 export interface AuthRequest extends Request {
   user?: AuthPayload;
 }

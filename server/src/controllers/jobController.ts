@@ -65,6 +65,8 @@ export async function update(req: AuthRequest, res: Response) {
 
     const job = await updateJob(req.params.id, result.data);
 
+    // Log separate events for status changes and assignment changes so the
+    // activity timeline can display meaningful "from → to" transitions.
     if (result.data.status && result.data.status !== existing.status) {
       await logActivity({
         action: 'JOB_STATUS_CHANGED',
@@ -122,6 +124,7 @@ export async function createNote(req: AuthRequest, res: Response) {
     entityId: req.params.id,
     userId: req.user!.userId,
     jobId: req.params.id,
+    // Truncate preview so activity feed stays readable without a join to Note.
     metadata: { preview: result.data.content.slice(0, 60) },
   });
   res.status(201).json(note);

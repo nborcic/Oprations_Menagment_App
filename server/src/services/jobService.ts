@@ -52,6 +52,7 @@ export async function getJobs(filters: JobFilters = {}) {
       createdBy: { select: { id: true, name: true } },
       _count: { select: { notes: true } },
     },
+    // High-priority jobs first, then soonest scheduled, then newest as tiebreaker.
     orderBy: [{ priority: 'desc' }, { scheduledDate: 'asc' }, { createdAt: 'desc' }],
   });
 }
@@ -70,7 +71,7 @@ export async function getJobById(id: string) {
       activityLogs: {
         include: { user: { select: { id: true, name: true, role: true } } },
         orderBy: { createdAt: 'desc' },
-        take: 30,
+        take: 30, // Cap at 30 — detail page only shows recent history, full log isn't needed.
       },
     },
   });
@@ -100,6 +101,7 @@ export async function updateJob(id: string, data: Partial<Omit<JobInput, 'create
   if (data.scheduledDate) {
     updateData.scheduledDate = new Date(data.scheduledDate);
   }
+  // Auto-stamp completedDate when status is set to COMPLETED — not editable by the caller.
   if (data.status === JobStatus.COMPLETED) {
     updateData.completedDate = new Date();
   }
@@ -124,6 +126,7 @@ export async function addNote(jobId: string, content: string, authorId: string) 
   });
 }
 
+// Run all counts in parallel — a single await Promise.all is faster than 6 sequential queries.
 export async function getDashboardStats() {
   const [total, open, inProgress, completed, overdue, customers] = await Promise.all([
     prisma.job.count(),

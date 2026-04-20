@@ -22,9 +22,12 @@ export async function login(req: Request, res: Response) {
   }
 }
 
+// Re-fetches the user from DB rather than returning the token payload —
+// ensures the client always gets the latest name/role, not stale JWT data.
 export async function getMe(req: AuthRequest, res: Response) {
   const user = await getUserById(req.user!.userId);
   if (!user) {
+    // Token is valid but user was deleted after it was issued.
     res.status(404).json({ error: 'User not found' });
     return;
   }

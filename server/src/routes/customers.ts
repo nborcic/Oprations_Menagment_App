@@ -4,6 +4,7 @@ import { list, get, create, update, remove } from '../controllers/customerContro
 
 const router = Router();
 
+// Apply auth to every route in this file at once instead of repeating it per handler.
 router.use(authenticate);
 router.get('/', list);
 router.get('/:id', get);
