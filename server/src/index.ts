@@ -9,8 +9,12 @@ import { errorHandler } from './middleware/errorHandler.js';
 const app = express();
 const PORT = process.env.PORT || 4000;
 
-// credentials:true allows the browser to send cookies/auth headers cross-origin.
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173', credentials: true }));
+const allowedOrigins = [
+  process.env.CLIENT_URL || 'http://localhost:5173',
+  'http://localhost:5173',
+  /\.vercel\.app$/,
+];
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 app.use(express.json());
 
 // Simple liveness check — used by Docker/uptime monitors without needing auth.
