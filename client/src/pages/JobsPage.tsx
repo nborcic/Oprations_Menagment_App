@@ -9,7 +9,7 @@ import { PageHeader } from '@/components/PageHeader';
 import { JobStatusBadge, PriorityBadge } from '@/components/JobStatusBadge';
 import { formatDate } from '@/lib/utils';
 
-const STATUS_OPTIONS: { value: ''; label: string } | { value: JobStatus; label: string }[] = [
+const STATUS_OPTIONS: { value: '' | JobStatus; label: string }[] = [
   { value: '', label: 'All Statuses' },
   { value: 'OPEN', label: 'Open' },
   { value: 'IN_PROGRESS', label: 'In Progress' },
