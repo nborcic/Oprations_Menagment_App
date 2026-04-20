@@ -1,3 +1,4 @@
+import { Prisma } from '@prisma/client';
 import { prisma } from '../lib/prisma.js';
 
 interface LogActivityParams {
@@ -6,7 +7,7 @@ interface LogActivityParams {
   entityId: string;
   userId: string;
   jobId?: string;
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, unknown> | null;
 }
 
 export async function logActivity(params: LogActivityParams) {
@@ -17,7 +18,7 @@ export async function logActivity(params: LogActivityParams) {
       entityId: params.entityId,
       userId: params.userId,
       jobId: params.jobId,
-      metadata: params.metadata,
+      metadata: params.metadata as Prisma.InputJsonValue ?? undefined,
     },
   });
 }

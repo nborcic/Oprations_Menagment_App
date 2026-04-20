@@ -7,3 +7,5 @@ server/dist
 server/.env
 *.env
 .env*
+.claude
+skills*
