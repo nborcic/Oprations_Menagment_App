@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // baseURL '/api' is proxied to the Express server by Vite's dev server config.
-export const api = axios.create({ baseURL: '/api' });
+export const api = axios.create({ baseURL: import.meta.env.VITE_API_URL || '/api' });
 
 // Attach the JWT to every outgoing request automatically.
 api.interceptors.request.use((config) => {
